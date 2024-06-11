@@ -14,7 +14,7 @@ def main():
     print("ENSF 692 Dogs of Calgary")
     dataFrame.set_index(['Breed','Year','Month'],inplace=True)
 
-    #print(dataFrame)
+    # print(dataFrame)
     while True:
         try:
             userInputDog = input("Enter Dog breed name:  ")
@@ -23,13 +23,42 @@ def main():
                 break
             else:
                 raise  ValueError("The dog breed is not found, enter again")
-        
+       
         except ValueError as e:
             print(e)
 
     # User input stage
+    idx = pd.IndexSlice
+    SortedDog = dataFrame.loc[idx[userInputDog,:,:],:]
+    year = SortedDog.index.get_level_values('Year').unique().tolist()
+    total_userinputBreed_yearly = SortedDog.groupby('Year')['Total'].sum()
+    totalBreed_yearly = dataFrame.groupby('Year')['Total'].sum()
+    # totalMentionedBreed = dataFrame.groupby('Year')['Total'].sum()
+    # total_year = dataFrame.groupby('Year')['Total'].sum()
+    # total_year_bybreed = SortedDog.groupby('Year')['Total'].sum()
+    total_accross_allYear = dataFrame['Total'].sum()
+    total_InputBreed_accross_allYear = SortedDog['Total'].sum()
+    for year in [2021,2022,2023]:
+        yearly_total = totalBreed_yearly.get(year,0)
+        yearly_total_UserinputBreed = total_userinputBreed_yearly.get(year)
+        breed_percentage_yearly = yearly_total_UserinputBreed/yearly_total *100
+        print(f"The {userInputDog} was {breed_percentage_yearly} of top breed in {year}.")
 
+    breed_percentage = total_InputBreed_accross_allYear/total_accross_allYear*100
+    print(f"The {userInputDog} was {breed_percentage} of top breed accross the year.")
+    # for year in year:
+    #     totalSortedBreedYearly = totalSortedBreed['Year']
+        # print(f"total ", yearly_total)
+        # print(yearly_total_breed)
+        # print(percentage)
+        
+    # print(totalBreed)
+    # for year in year:
+    #     totalBreedyearly = SortedDog[year].sum()
+    # print(totalBreedyearly)
     # Data anaylsis stage
+
+
 
 if __name__ == '__main__':
     main()
