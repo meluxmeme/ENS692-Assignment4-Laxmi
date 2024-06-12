@@ -8,57 +8,62 @@
 # Remember to include docstrings and comments.
 import numpy as np
 import pandas as pd
-def main():
+class DogBreed:
 
+    def user_input(userInputDog, dataFrame):
+
+        if (userInputDog in dataFrame.index.get_level_values('Breed')):
+            #print("Dog breed found in the database")
+            return userInputDog
+        else:
+            raise  ValueError("Dog breed not found, please try again")
+
+
+    def yearly_stat(userInputDog, dataFrame):
+        idx = pd.IndexSlice
+        SortedDog = dataFrame.loc[idx[userInputDog,:,:],:]
+        year = SortedDog.index.get_level_values('Year').unique().tolist()
+        print(f"The {userInputDog} was found in the top breeds for years: {", ".join(str(year) for year in year)}")
+        total_userinputBreed_yearly = SortedDog.groupby('Year')['Total'].sum()
+
+        totalBreed_yearly = dataFrame.groupby('Year')['Total'].sum()
+        # totalMentionedBreed = dataFrame.groupby('Year')['Total'].sum()
+        # total_year = dataFrame.groupby('Year')['Total'].sum()
+        # total_year_bybreed = SortedDog.groupby('Year')['Total'].sum()
+        total_accross_allYear = dataFrame['Total'].sum()
+        total_InputBreed_accross_allYear = SortedDog['Total'].sum()
+        print(f"There have been  {total_InputBreed_accross_allYear} {userInputDog} dogs registered total.")
+        for year in year:
+            yearly_total = totalBreed_yearly.get(year,0)
+            yearly_total_UserinputBreed = total_userinputBreed_yearly.get(year)
+            breed_percentage_yearly = yearly_total_UserinputBreed/yearly_total *100
+            print(f"The {userInputDog} was {breed_percentage_yearly} of top breed in {year}.")
+
+        breed_percentage = total_InputBreed_accross_allYear/total_accross_allYear*100
+        print(f"The {userInputDog} was {breed_percentage} of top breed accross the year.")
+
+    def popular_month(userInputDog, dataFrame):
+        idx = pd.IndexSlice
+        SortedDog = dataFrame.loc[idx[userInputDog,:,:],:]       
+        popular_userinputBreed_months = SortedDog.index.get_level_values('Month').unique().tolist()
+        print(f"Most popular month for the {userInputDog} is : {", " .join(str(popular_userinputBreed_months) for popular_userinputBreed_months in popular_userinputBreed_months)}")
+
+def main():
+    # DogBreed = DogBreed
     dataFrame = pd.read_excel('CalgaryDogBreeds.xlsx')
     print("ENSF 692 Dogs of Calgary")
     dataFrame.set_index(['Breed','Year','Month'],inplace=True)
 
     # print(dataFrame)
     while True:
+        userInputDog = input("Please enter a Dog breed:  ")
         try:
-            userInputDog = input("Enter Dog breed name:  ")
-            if (userInputDog in dataFrame.index.get_level_values('Breed')):
-                print("Dog breed found in the database")
-                break
-            else:
-                raise  ValueError("The dog breed is not found, enter again")
-       
+            DogBreed.user_input(userInputDog, dataFrame )
+            DogBreed.yearly_stat(userInputDog, dataFrame)
+            DogBreed.popular_month(userInputDog, dataFrame)
+            break
         except ValueError as e:
             print(e)
-
-    # User input stage
-    idx = pd.IndexSlice
-    SortedDog = dataFrame.loc[idx[userInputDog,:,:],:]
-    year = SortedDog.index.get_level_values('Year').unique().tolist()
-    total_userinputBreed_yearly = SortedDog.groupby('Year')['Total'].sum()
-    totalBreed_yearly = dataFrame.groupby('Year')['Total'].sum()
-    # totalMentionedBreed = dataFrame.groupby('Year')['Total'].sum()
-    # total_year = dataFrame.groupby('Year')['Total'].sum()
-    # total_year_bybreed = SortedDog.groupby('Year')['Total'].sum()
-    total_accross_allYear = dataFrame['Total'].sum()
-    total_InputBreed_accross_allYear = SortedDog['Total'].sum()
-    for year in [2021,2022,2023]:
-        yearly_total = totalBreed_yearly.get(year,0)
-        yearly_total_UserinputBreed = total_userinputBreed_yearly.get(year)
-        breed_percentage_yearly = yearly_total_UserinputBreed/yearly_total *100
-        print(f"The {userInputDog} was {breed_percentage_yearly} of top breed in {year}.")
-
-    breed_percentage = total_InputBreed_accross_allYear/total_accross_allYear*100
-    print(f"The {userInputDog} was {breed_percentage} of top breed accross the year.")
-    # for year in year:
-    #     totalSortedBreedYearly = totalSortedBreed['Year']
-        # print(f"total ", yearly_total)
-        # print(yearly_total_breed)
-        # print(percentage)
-        
-    # print(totalBreed)
-    # for year in year:
-    #     totalBreedyearly = SortedDog[year].sum()
-    # print(totalBreedyearly)
-    # Data anaylsis stage
-
-
 
 if __name__ == '__main__':
     main()
