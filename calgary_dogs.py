@@ -8,7 +8,6 @@ Author: Laxmi Paudel
 """
 import numpy as np
 import pandas as pd
-import re
 class DogBreed:
 
     def user_input(userInputDog, breed):
