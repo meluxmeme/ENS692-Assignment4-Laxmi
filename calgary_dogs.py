@@ -79,8 +79,13 @@ class DogBreed:
         #slicing only the user input dog breed data.
         SortedDog = dataFrame.loc[idx[userInputDog,:,:],:]  
          #list out and print the months that given dog breed data has.    
-        popular_userinputBreed_months = SortedDog.index.get_level_values('Month').unique().tolist()
-        print(f"Most popular month for the {userInputDog} is : {", " .join(str(popular_userinputBreed_months) for popular_userinputBreed_months in popular_userinputBreed_months)}")
+        popular_months = SortedDog.index.get_level_values('Month').value_counts()
+        max_occurrence = popular_months.max()
+
+        most_popular_months = popular_months[popular_months == max_occurrence].index.tolist()
+        most_popular_months.sort()
+        print(f"Most popular month for the {userInputDog} is : {" ".join(most_popular_months)}")
+            #   {", " .join(str(i) for i in popular_userinputBreed_months)}")
 
 
 def main():
