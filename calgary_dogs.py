@@ -8,13 +8,15 @@
 # Remember to include docstrings and comments.
 import numpy as np
 import pandas as pd
+import re
 class DogBreed:
 
-    def user_input(userInputDog, dataFrame):
+    def user_input(userInputDog, breed):
 
-        if (userInputDog in dataFrame.index.get_level_values('Breed')):
+
+        if (userInputDog.upper() in breed ):
             #print("Dog breed found in the database")
-            return userInputDog
+             return userInputDog.upper()
         else:
             raise  ValueError("Dog breed not found, please try again")
 
@@ -48,19 +50,21 @@ class DogBreed:
         popular_userinputBreed_months = SortedDog.index.get_level_values('Month').unique().tolist()
         print(f"Most popular month for the {userInputDog} is : {", " .join(str(popular_userinputBreed_months) for popular_userinputBreed_months in popular_userinputBreed_months)}")
 
+
 def main():
     # DogBreed = DogBreed
     dataFrame = pd.read_excel('CalgaryDogBreeds.xlsx')
     print("ENSF 692 Dogs of Calgary")
     dataFrame.set_index(['Breed','Year','Month'],inplace=True)
-
+    breed = dataFrame.index.get_level_values('Breed').unique().tolist()
     # print(dataFrame)
     while True:
         userInputDog = input("Please enter a Dog breed:  ")
+        userInputDogCase = userInputDog.upper()
         try:
-            DogBreed.user_input(userInputDog, dataFrame )
-            DogBreed.yearly_stat(userInputDog, dataFrame)
-            DogBreed.popular_month(userInputDog, dataFrame)
+            DogBreed.user_input(userInputDog, breed )
+            DogBreed.yearly_stat(userInputDogCase, dataFrame)
+            DogBreed.popular_month(userInputDogCase, dataFrame)
             break
         except ValueError as e:
             print(e)
